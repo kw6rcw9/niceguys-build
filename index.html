@@ -1,74 +1,226 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
-    <title>Unity Web Player | sea ​​battle</title>
-    <style>
-      body {
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
+<title>Unity Web Player | sea battle</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
+<style>
+    body {
         height: 100vh;
         width: 100vw;
         overflow: hidden;
         margin: 0;
         padding: 0;
-      }
-      #loading-overlay {
+        background-color: #53a5d8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        flex-direction: column;
+    }
+    #loading-overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: black; /* Черный фон */
-        z-index: 9999; /* Сделать фон на переднем плане */
-      }
-      #unity-canvas {
+        background-color: #53a5d8;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    #circle {
+        width: 23vh;
+        height: 23vh;
+        margin-bottom: 5vh;
+        animation: spin 2s linear infinite;
+    }
+    #loading-text {
+        color: white;
+        font-size: 3.56vh;
+        font-family: 'Quicksand', sans-serif;
+        text-align: center;
+        margin-bottom: 20vh;
+    }
+    #bottom-rectangle {
+        width: 93%;
+        height: 34vh;
+        background-color: #89ccf7;
+        border-radius: 30px 30px 25px 25px / 25px 25px 30px 30px;
+        border-bottom: 10px solid #2c83b6;
+        position: absolute;
+        bottom: 5vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 13px 15px 0 15px;
+        box-sizing: border-box;
+    }
+    #rectangle-text {
+        color: white;
+        font-size: 2.3vh;
+        font-family: 'Quicksand', sans-serif;
+        text-align: center;
+        transition: opacity 0.3s ease-in-out;
+    }
+    #rectangle-text.fade {
+        opacity: 0;
+    }
+    #button-container {
+        display: flex;
+        justify-content: flex-end;
+        width: calc(100% + 15px);
+        margin-right: -15px;
+    }
+    #action-button {
+        width: 40%;
+        height: 5vh;
+        background-color: #2c83b6;
+        color: white;
+        font-size: 3.1vh;
+        font-family: 'Quicksand', sans-serif;
+        border: none;
+        border-radius: 25px 0 25px 0 / 20px 0 20px 0;
+        cursor: pointer;
+        margin-bottom: 2px;
+        margin-right: 2px;
+        transition: opacity 0.3s ease-in-out;
+    }
+    #action-button.fade {
+        opacity: 0;
+    }
+    #unity-canvas {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background: #231F20;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="loading-overlay"></div>
-    <canvas id="unity-canvas" tabindex="-1"></canvas>
-    <script src="Build/sbuild.loader.js"></script>
-    <script>
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
+    }
+    #image-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    #rectangle-image {
+        max-height: 90%;
+        max-width: 100%;
+        transition: opacity 0.3s ease-in-out;
+    }
+    #rectangle-image.fade {
+        opacity: 0;
+    }
+</style>
+</head>
+<body>
+<div id="loading-overlay">
+    <img id="circle" src="circle.svg" alt="Loading circle">
+    <div id="loading-text">loading...</div>
+    <div id="bottom-rectangle">
+        <div id="rectangle-text">Earn bottles of rum in battles and then sell them on Tanpin!</div>
+        <div id="image-container">
+            <img id="rectangle-image" src="img1.svg" alt="Image">
+        </div>
+        <div id="button-container">
+            <button id="action-button" onclick="changeContent()">NEXT</button>
+        </div>
+    </div>
+</div>
+<canvas id="unity-canvas" tabindex="-1"></canvas>
+<script src="Build/sbuild.loader.js"></script>
+<script>
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
-
         var canvas = document.querySelector("#unity-canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.style.position = "fixed";
-      }
-
-      createUnityInstance(document.querySelector("#unity-canvas"), {
+    }
+    createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
         dataUrl: "Build/sbuild.data",
         frameworkUrl: "Build/sbuild.framework.js",
         codeUrl: "Build/sbuild.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "sea ​​battle",
+        productName: "sea battle",
         productVersion: "1.0",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then(function () {
-        // Скрытие черного фона после загрузки игры
+    }).then(function () {
         document.getElementById('loading-overlay').style.display = 'none';
-      });
-    </script>
-    <script>
-      Telegram.WebApp.expand();
-      Telegram.WebApp.ready();
-    </script>
-  </body>
+    });
+
+    const texts = [
+        "Earn bottles of rum in battles and then sell them on Tanpin!",
+        "You can choose the game mode on the commang screen. Free - normal game without betting, Bet - betting game",
+        "To create your room, click on the cross in the top right corner of the screen",
+        "You can choose the format of your room. A private room is to play with friends, a public room will be available for all players",
+        "To enter the room - send the code to friend, then paste it into the field for entering Room ID",
+        "If you win, you will be credited with double the amount of your bet. In case of a loss, you will lose the amount your bet",
+        "To move a ship on the playing field, tap it and move it to the desired position",
+        "To change the position of the ship on the field - click on the special button. To remove a ship, click on the trash can",
+        "Once you have your ships set up and ready to fight, press the Ready button.",
+        "To shoot, just click on the cell you want to shoot at. To win, destroy your opponent's ships faster than he destroys yours!",
+        "If you need to take a Time Out, offer to do so to your opponent.",
+        "To play for a bet, go to the shop and top up your wallet with the amount you need"
+    ];
+
+    const imagePaths = [
+        "img1.svg",
+        "img2.svg",
+        "img3.svg", 
+        "img4.svg", 
+        "img5.svg",
+        "img6.svg", 
+        "img7.svg", 
+        "img8.svg", 
+        "img9.svg", 
+        "img10.svg", 
+        "img11.svg", 
+        "img12.svg"
+    ];
+
+    const images = [];
+    for (let i = 0; i < imagePaths.length; i++) {
+        const img = new Image();
+        img.src = imagePaths[i];
+        images.push(img);
+    }
+
+    let currentIndex = 0;
+    function changeContent() {
+        const imageElement = document.getElementById("rectangle-image");
+        const textElement = document.getElementById("rectangle-text");
+        const buttonElement = document.getElementById("action-button");
+
+        imageElement.classList.add('fade');
+        textElement.classList.add('fade');
+        buttonElement.classList.add('fade');
+
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % texts.length;
+            document.getElementById("rectangle-text").innerText = texts[currentIndex];
+            imageElement.src = images[currentIndex].src;
+            
+            imageElement.classList.remove('fade');
+            textElement.classList.remove('fade');
+            buttonElement.classList.remove('fade');
+        }, 300);
+    }
+</script>
+<script>Telegram.WebApp.expand(); Telegram.WebApp.ready();</script>
+</body>
 </html>
