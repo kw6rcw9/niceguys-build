@@ -3,36 +3,21 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
+    <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"
+  />
     <title>Unity Web Player | sea ​​battle</title>
     <style>
       body {
         height: 100vh;
         width: 100vh;
         overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      #loading-message {
-        font-size: 2em;
-        color: white;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      #unity-canvas {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #231F20;
       }
     </style>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <div id="loading-message">Привет</div>
-    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <canvas id="unity-canvas" width=597 height=1287 tabindex="-1" style="width: 597px; height: 1287px; background: #231F20"></canvas>
     <script src="Build/sbuild.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -50,7 +35,6 @@
         document.body.style.textAlign = "left";
       }
 
-      
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
         dataUrl: "Build/sbuild.data",
@@ -62,14 +46,11 @@
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then(function () {
-        // Скрытие сообщения после загрузки игры
-        document.getElementById('loading-message').style.display = 'none';
       });
     </script>
-    <script>
-      Telegram.WebApp.expand();
-      Telegram.WebApp.ready();
+     <script>
+      Telegram.WebApp.expand()
+      Telegram.WebApp.ready()
     </script>
   </body>
 </html>
